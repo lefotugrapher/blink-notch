@@ -8,6 +8,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private let menu = NSMenu()
     private let pauseItem = NSMenuItem(title: "Pause", action: nil, keyEquivalent: "")
     private let everyMenu = NSMenu()
+    private let loginItem = NSMenuItem(title: "Launch at login", action: nil, keyEquivalent: "")
 
     init(coordinator: ReminderCoordinator) {
         self.coordinator = coordinator
@@ -30,6 +31,10 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         every.submenu = everyMenu
         menu.addItem(every)
 
+        loginItem.action = #selector(toggleLaunchAtLogin)
+        loginItem.target = self
+        menu.addItem(loginItem)
+
         menu.addItem(.separator())
         menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         statusItem.menu = menu
@@ -40,7 +45,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     func dump() -> String {
         refresh()
         return menu.items.map { top in
-            guard let sub = top.submenu else { return top.isSeparatorItem ? "---" : top.title }
+            guard let sub = top.submenu else {
+                return top.isSeparatorItem ? "---" : (top.state == .on ? "[x] " : "") + top.title
+            }
             return top.title + ": " + sub.items.map { ($0.state == .on ? "[x] " : "[ ] ") + $0.title }.joined(separator: ", ")
         }.joined(separator: "\n")
     }
@@ -49,6 +56,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     private func refresh() {
         pauseItem.title = coordinator.isPaused ? "Resume" : "Pause"
+        loginItem.state = LaunchAtLogin.isEnabled ? .on : .off
         for entry in everyMenu.items {
             entry.state = entry.tag == coordinator.interval.rawValue ? .on : .off
         }
@@ -62,6 +70,15 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     @objc private func showNow() { coordinator.showNow() }
     @objc private func togglePause() { coordinator.setPaused(!coordinator.isPaused) }
+    @objc private func toggleLaunchAtLogin() {
+        do {
+            try LaunchAtLogin.setEnabled(!LaunchAtLogin.isEnabled)
+        } catch {
+            // Leave the item as it is (unchecked); no modal, no crash.
+            NSLog("Blink Notch: could not change launch at login: \(error)")
+        }
+        refresh()
+    }
     @objc private func chooseInterval(_ sender: NSMenuItem) {
         if let interval = ReminderInterval(rawValue: sender.tag) { coordinator.setInterval(interval) }
     }

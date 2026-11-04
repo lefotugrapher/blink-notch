@@ -34,6 +34,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         timer = ReminderTimer(coordinator: coordinator)
         systemEvents = SystemEvents(coordinator: coordinator)
 
+        if args.contains("--login-item-selftest") {
+            // Registers and unregisters the login item once, printing the status each time.
+            print("before:", LaunchAtLogin.isEnabled)
+            do { try LaunchAtLogin.setEnabled(true) } catch { print("register error:", error) }
+            print("after register:", LaunchAtLogin.isEnabled)
+            do { try LaunchAtLogin.setEnabled(false) } catch { print("unregister error:", error) }
+            print("after unregister:", LaunchAtLogin.isEnabled)
+            exit(0)
+        }
         if args.contains("--dump-menu") {
             print(menuBar.dump())
             exit(0)

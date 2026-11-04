@@ -11,3 +11,12 @@ cp "$BIN" "$APP/Contents/MacOS/BlinkNotch"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
 codesign --force --sign - "$APP"
 echo "$PWD/$APP"
+
+# `--install` copies the app to ~/Applications so Launch at login has a stable path.
+if [ "${1:-}" = "--install" ]; then
+    pkill -x BlinkNotch 2>/dev/null || true
+    mkdir -p "$HOME/Applications"
+    rm -rf "$HOME/Applications/Blink Notch.app"
+    cp -R "$APP" "$HOME/Applications/Blink Notch.app"
+    echo "installed: $HOME/Applications/Blink Notch.app"
+fi
