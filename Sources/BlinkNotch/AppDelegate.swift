@@ -12,7 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var activity: NSObjectProtocol?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Debug switches: --preview, --freeze-at <seconds>, --message <index>, --style <name>, --dump-menu,
+        // Debug switches: --preview, --freeze-at <seconds>, --message <index>, --style <name>, --render-frames <dir> [--fps n], --dump-menu,
         // and env BLINKNOTCH_DEBUG_INTERVAL_SECONDS to replace the interval.
         activity = ProcessInfo.processInfo.beginActivity(
             options: .userInitiatedAllowingIdleSystemSleep, reason: "Blink reminder timer")
@@ -42,6 +42,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         timer = ReminderTimer(coordinator: coordinator)
         systemEvents = SystemEvents(coordinator: coordinator)
 
+        if let directory = value(after: "--render-frames") {
+            let style = styles.next()
+            let fps = value(after: "--fps").flatMap(Double.init) ?? 20
+            FrameRenderer.render(into: directory, style: style, message: pool.next(), fps: fps, scale: 2)
+            exit(0)
+        }
         if args.contains("--login-item-selftest") {
             // Registers and unregisters the login item once, printing the status each time.
             print("before:", LaunchAtLogin.isEnabled)
