@@ -43,6 +43,14 @@ import Testing
         #expect(s.nextFire == t0 + 5000 + 1200)
     }
 
+    // Final review: App Nap can delay a timer by minutes; that must not silently drop the reminder.
+    @Test func fireTwoMinutesLateStillCounts() {
+        var s = make()
+        let fired = s.timerDidFire(now: t0 + 1200 + 120)
+        #expect(fired)
+        #expect(s.nextFire == t0 + 1320 + 1200)
+    }
+
     @Test func pausedNeverFires() {
         var s = make()
         s.pause()

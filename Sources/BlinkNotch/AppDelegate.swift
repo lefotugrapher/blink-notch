@@ -8,10 +8,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBar: MenuBarController?
     private var timer: ReminderTimer?
     private var systemEvents: SystemEvents?
+    /// Keeps macOS from App-Napping the app, which would delay the reminder timer.
+    private var activity: NSObjectProtocol?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Debug switches: --preview, --freeze-at <seconds>, --message <index>, --dump-menu,
         // and env BLINKNOTCH_DEBUG_INTERVAL_SECONDS to replace the interval.
+        activity = ProcessInfo.processInfo.beginActivity(
+            options: .userInitiatedAllowingIdleSystemSleep, reason: "Blink reminder timer")
         let args = CommandLine.arguments
         func value(after flag: String) -> String? {
             args.firstIndex(of: flag).flatMap { $0 + 1 < args.count ? args[$0 + 1] : nil }

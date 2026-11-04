@@ -10,8 +10,10 @@ public struct SuspendReason: OptionSet, Sendable {
 
 /// Pure countdown state machine. It never reads the clock; callers pass `now`.
 public struct ReminderSchedule: Sendable {
-    /// A fire this far past its due time means the Mac was asleep; skip it.
-    private static let staleAfter: TimeInterval = 60
+    /// A fire at least this far past its due time is skipped as stale. Real sleep is
+    /// handled by suspending, so this is only a backstop: keep it well above any
+    /// timer delay (App Nap can hold a timer back for minutes), hence half an interval.
+    private static let minimumStaleAfter: TimeInterval = 60
     /// Timers may fire marginally early; accept up to this much.
     private static let earlyTolerance: TimeInterval = 1
 
@@ -58,7 +60,7 @@ public struct ReminderSchedule: Sendable {
     public mutating func timerDidFire(now: Date) -> Bool {
         guard isRunning, let due = nextFire else { return false }
         guard now >= due - Self.earlyTolerance else { return false }
-        let isStale = now > due + Self.staleAfter
+        let isStale = now > due + max(Self.minimumStaleAfter, interval / 2)
         nextFire = now + interval
         return !isStale
     }
