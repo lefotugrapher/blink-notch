@@ -45,6 +45,18 @@ notch until it drops out. On a screen without a notch the same sequence runs
 from just below the menu bar, with an 8 pt gap. Read the notch size from
 `NSScreen` at run time; don't hard-code 220 x 38.
 
+### Animation styles (added 2026-11-04 at his request)
+
+After the first design he asked for ten more blink mockups and then for all of them
+to be added, so each reminder shows a different animation. There are 11 styles in
+total (the original plus the ten), never the same style twice in a row. Mockups:
+`assets/notch-mockups-round3-blink-ideas.html`. Styles 2 to 9 reuse the circle-then-pill
+motion with a different avatar or trick; style 1 is a white pill with a giant iris;
+style 10 has no pill (a bouncing eyeball with a caption under it). Some styles
+carry their own fixed text (cat, countdown, wiper, shutter, sleepy, buffering);
+the others use the random message pool. A separate water reminder was discussed
+but is not part of this.
+
 ## What he agreed to (stated as guesses, he said "cool")
 
 - Native Mac app, lives in the menu bar (small icon), no Dock icon.

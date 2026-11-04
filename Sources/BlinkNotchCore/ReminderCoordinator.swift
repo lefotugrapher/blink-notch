@@ -4,7 +4,7 @@ import Foundation
 @MainActor
 public protocol PillPresenting: AnyObject {
     var isPresenting: Bool { get }
-    func present(message: Message, on display: DisplayInfo)
+    func present(message: Message, style: BlinkStyle, on display: DisplayInfo)
 }
 
 @MainActor
@@ -22,18 +22,21 @@ public final class ReminderCoordinator {
     private let intervalOverride: TimeInterval?
     private let now: () -> Date
     private var pool: MessagePool
+    private var styles: BlinkStylePicker
 
     public private(set) var schedule: ReminderSchedule
     /// Called after every change to `schedule`, so the timer can be re-armed.
     public var onScheduleChange: (() -> Void)?
 
     public init(presenter: PillPresenting, screens: ScreenProviding, settings: Settings,
-                pool: MessagePool = MessagePool(), intervalOverride: TimeInterval? = nil,
+                pool: MessagePool = MessagePool(), styles: BlinkStylePicker = BlinkStylePicker(),
+                intervalOverride: TimeInterval? = nil,
                 now: @escaping () -> Date = Date.init) {
         self.presenter = presenter
         self.screens = screens
         self.settings = settings
         self.pool = pool
+        self.styles = styles
         self.intervalOverride = intervalOverride
         self.now = now
         self.schedule = ReminderSchedule(interval: intervalOverride ?? settings.interval.seconds, now: now())
@@ -47,7 +50,7 @@ public final class ReminderCoordinator {
     public func showNow() -> Bool {
         guard !presenter.isPresenting,
               let display = pickDisplay(cursor: screens.cursor, from: screens.displays) else { return false }
-        presenter.present(message: pool.next(), on: display)
+        presenter.present(message: pool.next(), style: styles.next(), on: display)
         return true
     }
 

@@ -1,0 +1,235 @@
+<style>
+.scr{position:relative;width:100%;height:215px;border-radius:10px;overflow:hidden;background:linear-gradient(160deg,#27324d,#3b2a52 60%,#5a3a66)}
+.bar{position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,.6);z-index:5}
+.notch{position:absolute;top:0;left:50%;width:120px;height:26px;margin-left:-60px;background:#000;border-radius:0 0 14px 14px;z-index:6}
+.stage{position:absolute;inset:0;overflow:hidden;z-index:3}
+.shape{position:absolute;left:50%;transform:translateX(-50%);border-radius:40px;overflow:hidden;background:#000}
+.content{position:absolute;left:50%;margin-left:-116px;top:0;width:232px;height:70px;opacity:0;z-index:2}
+.t{position:absolute;left:68px;top:12px;white-space:nowrap;font-family:system-ui,sans-serif}
+.t .s{font-size:9px;letter-spacing:.07em;color:#8e8e93;text-transform:uppercase;font-weight:600}
+.t .m{position:relative;height:19px;font-size:14px;font-weight:700;color:#fff;margin:2px 0}
+.t .m span{position:absolute;left:0;top:0;white-space:nowrap}
+.t .f{font-size:10.5px;color:#8e8e93}
+.av{position:absolute;left:16px;top:15px;width:40px;height:40px}
+
+/* shared 6.6 s timeline: drop, expand, hold, shrink to circle, rise */
+.ab{animation:shapeAB 6.6s infinite}
+.ab .content{animation:fadeAB 6.6s infinite}
+@keyframes shapeAB{
+ 0%{top:-44px;width:44px;height:44px}
+ 5.3%{top:42px;width:44px;height:44px}
+ 7.6%{top:36px;width:44px;height:44px}
+ 12.9%{top:36px;width:250px;height:76px}
+ 16.7%{top:36px;width:232px;height:70px}
+ 75.8%{top:36px;width:232px;height:70px}
+ 84.8%{top:36px;width:44px;height:44px}
+ 89.4%{top:36px;width:44px;height:44px}
+ 97%{top:-44px;width:44px;height:44px}
+ 100%{top:-44px;width:44px;height:44px}}
+@keyframes fadeAB{0%,12.9%{opacity:0}17.4%,74%{opacity:1}78.8%,100%{opacity:0}}
+
+/* shared eye parts */
+.ball{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;background:#fff;overflow:hidden}
+.pu{position:absolute;left:12px;top:12px;width:16px;height:16px;border-radius:50%;background:#1a1a1a;animation:lookK 6.6s infinite}
+@keyframes lookK{0%,14%{transform:translate(0,0)}19%{transform:translate(-9px,2px)}27%,31%{transform:translate(8px,-2px)}40%{transform:translate(-3px,6px)}50%,100%{transform:translate(0,0)}}
+.lid{position:absolute;left:0;right:0;top:0;height:43px;background:#ff5a5f;border-bottom:3px solid #b3262b;box-sizing:border-box;transform:translateY(-110%);animation:lidK 6.6s infinite}
+@keyframes lidK{0%,18.9%{transform:translateY(-110%)}20.2%,22%{transform:translateY(0)}24.2%,34%{transform:translateY(-110%)}35.3%,37.1%{transform:translateY(0)}39.3%,49.2%{transform:translateY(-110%)}50.5%,58.3%{transform:translateY(0)}61.4%,100%{transform:translateY(-110%)}}
+.thump{transform-origin:50% 100%;animation:thumpK 6.6s infinite}
+@keyframes thumpK{0%,20%,35%,50%{transform:scale(1,1)}21.5%,36.5%,51.5%{transform:scale(1.1,.86)}25%,40%,55%{transform:scale(.95,1.08)}28%,100%{transform:scale(1,1)}}
+
+/* 1: the whole pill is the eye */
+.white{background:#fff}
+.white .t .m{color:#1a1a1a}.white .t .s,.white .t .f{color:#7a7a80}
+.bigpupil{position:absolute;right:14px;top:9px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#1a1a1a 0 38%,#3b82f6 40% 100%);animation:lookBig 6.6s infinite}
+@keyframes lookBig{0%,14%{transform:translateX(0)}20%{transform:translateX(-14px)}30%{transform:translateX(6px)}45%,100%{transform:translateX(0)}}
+.lidwhole{position:absolute;inset:0;background:#ff5a5f;border-bottom:5px solid #b3262b;transform:translateY(-110%);animation:lidK 6.6s infinite;z-index:4}
+.white .content{left:50%}
+.white .t{left:20px}
+
+/* 2: lashes */
+.lash{position:absolute;left:19px;top:-5px;width:2px;height:9px;background:#111;border-radius:1px;transform-origin:50% 25px;transform:rotate(var(--r));animation:flutter 6.6s infinite}
+@keyframes flutter{0%,19%,100%{scale:1 1}21%{scale:1 1.7}23%{scale:1 1}36%{scale:1 1.7}38%{scale:1 1}51%{scale:1 1.7}57%{scale:1 1.3}60%{scale:1 1}}
+.cheek{position:absolute;top:27px;width:8px;height:5px;border-radius:50%;background:#ff8fa3;opacity:.8;z-index:2}
+
+/* 3: slow cat blink */
+.cat{background:#d8ec6a}
+.slit{position:absolute;left:17px;top:6px;width:6px;height:28px;border-radius:50%;background:#111}
+.lidslow{position:absolute;left:0;right:0;top:0;height:43px;background:#6b4f2a;border-bottom:3px solid #3e2c14;box-sizing:border-box;transform:translateY(-110%);animation:slowK 6.6s infinite}
+@keyframes slowK{0%,19%{transform:translateY(-110%)}27%,33%{transform:translateY(0)}41%,50%{transform:translateY(-110%)}58%,64%{transform:translateY(0)}72%,100%{transform:translateY(-110%)}}
+
+/* 4: two little eyes, blinking in turn */
+.e2{position:absolute;top:11px;width:17px;height:17px;border-radius:50%;background:#fff;overflow:hidden}
+.e2.l{left:1px}.e2.r{left:22px}
+.e2 .pu{left:5px;top:5px;width:7px;height:7px}
+.e2 .lid{height:20px;border-bottom-width:2px}
+.e2.r .lid{animation-delay:.3s}
+.brow{position:absolute;top:5px;width:14px;height:3px;border-radius:2px;background:#fff;animation:brow 6.6s infinite}
+.brow.l{left:2px;transform:rotate(-8deg)}.brow.r{left:23px;transform:rotate(8deg)}
+@keyframes brow{0%,18%{margin-top:0}20%,23%{margin-top:-3px}25%,100%{margin-top:0}}
+
+/* 5: countdown */
+.pill5{animation:shapeAB 6.6s infinite,flash5 6.6s infinite}
+.pill5 .content{animation:fadeAB 6.6s infinite}
+@keyframes flash5{0%,46%{background:#000}47%,55%{background:#ff5a5f}62%,100%{background:#000}}
+.num{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;border:3px solid #fff;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:800 20px system-ui,sans-serif;color:#fff;opacity:0}
+.n3{animation:n3 6.6s infinite}.n2{animation:n2 6.6s infinite}.n1{animation:n1 6.6s infinite}.nx{animation:nx 6.6s infinite}
+@keyframes n3{0%,17%{opacity:0}18%,27%{opacity:1}28%,100%{opacity:0}}
+@keyframes n2{0%,27%{opacity:0}28%,37%{opacity:1}38%,100%{opacity:0}}
+@keyframes n1{0%,37%{opacity:0}38%,46%{opacity:1}47%,100%{opacity:0}}
+@keyframes nx{0%,46%{opacity:0}47%,74%{opacity:1}78%,100%{opacity:0}}
+.shut{width:22px;height:11px;border-bottom:5px solid #fff;border-radius:0 0 22px 22px;box-sizing:border-box}
+.h1{animation:hA 6.6s infinite}.h2{animation:hB 6.6s infinite}
+@keyframes hA{0%,46%{opacity:1}47%,100%{opacity:0}}
+@keyframes hB{0%,46%{opacity:0}47%,100%{opacity:1}}
+
+/* 6: windshield wiper */
+.wiper{position:absolute;left:19px;bottom:-3px;width:3px;height:44px;background:#111;border-radius:2px;transform-origin:50% 100%;transform:rotate(-62deg);animation:wipe 6.6s infinite}
+@keyframes wipe{0%,19%{transform:rotate(-62deg)}23%{transform:rotate(62deg)}27%,34%{transform:rotate(-62deg)}38%{transform:rotate(62deg)}42%,49%{transform:rotate(-62deg)}53%{transform:rotate(62deg)}57%,100%{transform:rotate(-62deg)}}
+.smudge{position:absolute;inset:0;background:rgba(120,120,130,.45);animation:clean 6.6s infinite}
+@keyframes clean{0%,17%{opacity:1}23%{opacity:.6}38%{opacity:.3}53%,100%{opacity:0}}
+
+/* 7: camera shutter */
+.blades{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#202020 0 60deg,#363636 60deg 120deg,#202020 120deg 180deg,#363636 180deg 240deg,#202020 240deg 300deg,#363636 300deg 360deg);transform:scale(0) rotate(0);animation:shutter 6.6s infinite}
+@keyframes shutter{0%,18.9%{transform:scale(0) rotate(0)}20.2%,22%{transform:scale(1.1) rotate(50deg)}24.2%,34%{transform:scale(0) rotate(90deg)}35.3%,37.1%{transform:scale(1.1) rotate(50deg)}39.3%,49.2%{transform:scale(0) rotate(90deg)}50.5%,58.3%{transform:scale(1.1) rotate(50deg)}61.4%,100%{transform:scale(0) rotate(90deg)}}
+.cam{box-shadow:0 0 0 3px #555}
+
+/* 8: sleepy */
+.lidsleepy{position:absolute;left:0;right:0;top:0;height:43px;background:#7d6bb8;border-bottom:3px solid #4b3d85;box-sizing:border-box;transform:translateY(-55%);animation:sleepyK 6.6s infinite}
+@keyframes sleepyK{0%,14%{transform:translateY(-110%)}18%{transform:translateY(-52%)}26%{transform:translateY(-28%)}31%{transform:translateY(-8%)}32.5%{transform:translateY(-110%)}35.3%,37.1%{transform:translateY(0)}39.3%,49.2%{transform:translateY(-110%)}50.5%,58.3%{transform:translateY(0)}61.4%,100%{transform:translateY(-110%)}}
+.z{position:absolute;left:44px;font:800 12px system-ui,sans-serif;color:#b9a8ff;opacity:0;animation:zz 6.6s infinite}
+@keyframes zz{0%,17%{opacity:0;transform:translate(0,12px)}20%{opacity:1}31%{opacity:0;transform:translate(10px,-14px)}100%{opacity:0}}
+
+/* 9: buffering */
+.spin{position:absolute;left:12px;top:12px;width:16px;height:16px;border-radius:50%;border:3px solid rgba(0,0,0,.15);border-top-color:#111;box-sizing:border-box;animation:rot .8s linear infinite,spinvis 6.6s infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes spinvis{0%,16%{opacity:0}18%,50%{opacity:1}52%,100%{opacity:0}}
+.pu.after{opacity:0;animation:lookK 6.6s infinite,puvis 6.6s infinite}
+@keyframes puvis{0%,52%{opacity:0}56%,100%{opacity:1}}
+.b1{animation:hA9 6.6s infinite}.b2{animation:hB9 6.6s infinite}
+@keyframes hA9{0%,54%{opacity:1}55%,100%{opacity:0}}
+@keyframes hB9{0%,54%{opacity:0}55%,100%{opacity:1}}
+
+/* 10: rolling eyeball, no pill */
+.big{position:absolute;left:50%;width:86px;height:86px;margin-left:-43px;border-radius:50%;background:#fff;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.4);animation:bounce10 6.6s infinite}
+.big .pu{left:28px;top:28px;width:32px;height:32px;animation:look10 6.6s infinite}
+.big .pu::after{content:"";position:absolute;left:6px;top:6px;width:9px;height:9px;border-radius:50%;background:#fff}
+.big .lid{height:92px;border-bottom-width:5px}
+@keyframes bounce10{
+ 0%{top:-100px;transform:rotate(-200deg)}
+ 6%{top:46px;transform:rotate(0)}
+ 9%{top:20px}
+ 12%{top:46px}
+ 14%{top:34px}
+ 16%,84%{top:46px;transform:rotate(0)}
+ 92%{top:-100px;transform:rotate(240deg)}
+ 100%{top:-100px;transform:rotate(240deg)}}
+@keyframes look10{0%,14%{transform:translate(0,0)}18%{transform:translate(-14px,3px)}26%{transform:translate(12px,-3px)}34%,100%{transform:translate(0,0)}}
+.cap{position:absolute;left:50%;top:138px;width:176px;margin-left:-88px;height:56px;background:#000;border-radius:28px;opacity:0;animation:capK 6.6s infinite;font-family:system-ui,sans-serif;text-align:center;padding-top:7px;box-sizing:border-box}
+.cap .s{font-size:8px;letter-spacing:.07em;color:#8e8e93;text-transform:uppercase;font-weight:600}
+.cap .m{font-size:13px;font-weight:700;color:#fff;margin:1px 0}
+.cap .f{font-size:9.5px;color:#8e8e93}
+@keyframes capK{0%,16%{opacity:0;transform:translateY(10px)}22%,76%{opacity:1;transform:translateY(0)}84%,100%{opacity:0;transform:translateY(10px)}}
+</style>
+
+<h2>10 more blink reminder ideas</h2>
+<p class="subtitle">All keep the eye and the slamming eyelid, but each changes the character or the trick. They loop, so just watch.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="blink-1-pill-is-eye" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab white"><div class="lidwhole"></div><div class="content" style="margin-left:-116px">
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Blink, you goof.</span></div><div class="f">from: your eyeballs</div></div>
+        <div class="bigpupil"></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>1. The whole pill is the eye</h3><p>A white pill with a giant iris on the right. The coral eyelid slams down over the entire notification.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-2-lashes" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av thump">
+          <i class="lash" style="--r:-50deg"></i><i class="lash" style="--r:-25deg"></i><i class="lash" style="--r:0deg"></i><i class="lash" style="--r:25deg"></i><i class="lash" style="--r:50deg"></i>
+          <div class="ball"><div class="pu"></div><div class="lid"></div></div>
+        </div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Blink, you goof.</span></div><div class="f">from: your eyeballs</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>2. Fluttering lashes</h3><p>The same eye, with long lashes that flutter every time the lid slams. Flirty and silly.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-3-slow-cat" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av"><div class="ball cat"><div class="slit"></div><div class="lidslow"></div></div></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Slow-blink at me.</span></div><div class="f">from: your cat (and your eyes)</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>3. Slow-blinking cat</h3><p>A green cat eye with a slit pupil. It does two long, lazy blinks instead of slams. Calm, not frantic.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-4-two-eyes" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av thump"><div class="brow l"></div><div class="brow r"></div>
+          <div class="e2 l"><div class="pu"></div><div class="lid"></div></div>
+          <div class="e2 r"><div class="pu"></div><div class="lid"></div></div>
+        </div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Blink, you goof.</span></div><div class="f">from: your eyeballs</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>4. Two little eyes</h3><p>A pair of small eyes with eyebrows. They blink one after the other, and the brows pop up each time.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-5-countdown" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape pill5"><div class="content">
+        <div class="av"><div class="num n3">3</div><div class="num n2">2</div><div class="num n1">1</div><div class="num nx"><div class="shut"></div></div></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span class="h1">Ready to blink?</span><span class="h2">BLINK NOW!</span></div><div class="f">from: your eyeballs</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>5. Countdown, then flash</h3><p>3, 2, 1, then the whole pill flashes coral and a closed eye appears: "BLINK NOW!". Feels like a game.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-6-wiper" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av"><div class="ball"><div class="pu"></div><div class="smudge"></div><div class="wiper"></div></div></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Wipers on.</span></div><div class="f">from: your windshield (eyes)</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>6. Windshield wiper</h3><p>No eyelid. A car wiper sweeps across a smudgy eye three times until it's clean.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-7-shutter" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av thump"><div class="ball cam"><div class="pu"></div><div class="blades"></div></div></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Click. Blink captured.</span></div><div class="f">from: your eyes' camera roll</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>7. Camera shutter</h3><p>The blink is a camera iris snapping shut over the eye, with a rotating aperture. Click, click, click.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-8-sleepy" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av"><div class="ball"><div class="pu"></div><div class="lidsleepy"></div></div>
+          <span class="z" style="top:-2px">z</span><span class="z" style="top:-8px;left:52px;animation-delay:.5s">Z</span></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span>Wake up. Blink.</span></div><div class="f">from: your eyelids (asleep)</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>8. Sleepy eye</h3><p>A heavy purple lid droops lower and lower with floating Zs, then snaps awake and slams twice.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-9-buffering" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="shape ab"><div class="content">
+        <div class="av thump"><div class="ball"><div class="spin"></div><div class="pu after"></div><div class="lid"></div></div></div>
+        <div class="t"><div class="s">Mail &middot; now</div><div class="m"><span class="b1">Buffering&hellip;</span><span class="b2">Reloaded.</span></div><div class="f">from: your eyeballs</div></div>
+      </div></div></div></div></div>
+    <div class="card-body"><h3>9. Buffering eye</h3><p>The pupil is a loading spinner. Three blinks later the page "reloads": the pupil returns and the headline changes.</p></div>
+  </div>
+
+  <div class="card" data-choice="blink-10-rolling-eyeball" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div><div class="stage">
+      <div class="big"><div class="pu"></div><div class="lid"></div></div>
+      <div class="cap"><div class="s">Mail &middot; now</div><div class="m">Blink, you goof.</div><div class="f">from: your eyeballs</div></div>
+    </div></div></div>
+    <div class="card-body"><h3>10. Bouncing eyeball</h3><p>No pill. A big eyeball tumbles out of the notch, bounces to a stop, looks at you and blinks. A small caption slides up below it.</p></div>
+  </div>
+
+</div>

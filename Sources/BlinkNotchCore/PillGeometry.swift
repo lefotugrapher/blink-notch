@@ -11,6 +11,10 @@ public struct PillGeometry: Equatable, Sendable {
     /// Largest `drop` or `expansion` value; the window must fit the shape at this size.
     public static let maxProgress: Double = 1.12
     public static let circleDiameter: CGFloat = 44
+    /// The bouncing-eyeball style: a big eyeball with a small caption pill under it.
+    public static let ballDiameter: CGFloat = 86
+    public static let captionSize = CGSize(width: 176, height: 56)
+    private static let captionGap: CGFloat = 6
 
     private static let pillHeight: CGFloat = 70
     private static let minimumPillWidth: CGFloat = 260
@@ -26,6 +30,8 @@ public struct PillGeometry: Equatable, Sendable {
     /// Distance from the window top to the top of the resting shape.
     public let restTop: CGFloat
     public let windowSize: CGSize
+    /// Top of the caption under the bouncing eyeball, from the window top.
+    public let captionTop: CGFloat
 
     public init(display: DisplayInfo) {
         if let notch = display.notch {
@@ -40,14 +46,16 @@ public struct PillGeometry: Equatable, Sendable {
             pillSize = CGSize(width: Self.floatingPillWidth, height: Self.pillHeight)
             restTop = Self.gapBelowMenuBar
         }
+        captionTop = restTop + Self.ballDiameter + Self.captionGap
         let d = Self.circleDiameter
         let m = CGFloat(Self.maxProgress)
         // Widest and tallest the shape gets: the pill at maximum expansion, or the
         // circle at maximum drop overshoot.
         let circleBottom = restTop + m * (restTop + d)
         let pillBottom = restTop + d + (pillSize.height - d) * m
-        windowSize = CGSize(width: (d + (pillSize.width - d) * m).rounded(.up),
-                            height: max(circleBottom, pillBottom).rounded(.up))
+        let captionBottom = captionTop + Self.captionSize.height + 14
+        windowSize = CGSize(width: max(d + (pillSize.width - d) * m, Self.captionSize.width).rounded(.up),
+                            height: max(circleBottom, pillBottom, captionBottom).rounded(.up))
     }
 
     /// Window frame centred on the display. The top sits at the screen top for a
@@ -71,5 +79,13 @@ public struct PillGeometry: Equatable, Sendable {
         let hiddenTop = -d
         let top = hiddenTop + (restTop - hiddenTop) * p
         return CGRect(x: windowSize.width / 2 - width / 2, y: top, width: width, height: height)
+    }
+
+    /// The bouncing eyeball's rectangle in window coordinates. `drop` 0 is fully above
+    /// the window, 1 is the resting spot; values below 1 are bounces.
+    public func ballFrame(drop: Double) -> CGRect {
+        let d = Self.ballDiameter
+        let top = -d + (restTop + d) * CGFloat(drop)
+        return CGRect(x: windowSize.width / 2 - d / 2, y: top, width: d, height: d)
     }
 }

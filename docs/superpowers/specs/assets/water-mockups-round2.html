@@ -1,0 +1,163 @@
+<style>
+.scr{position:relative;width:100%;height:215px;border-radius:10px;overflow:hidden;background:linear-gradient(160deg,#27324d,#3b2a52 60%,#5a3a66)}
+.bar{position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,.6);z-index:5}
+.notch{position:absolute;top:0;left:50%;width:120px;height:26px;margin-left:-60px;background:#000;border-radius:0 0 14px 14px;z-index:6}
+.stage{position:absolute;inset:0;overflow:hidden;z-index:3}
+.shape{position:absolute;left:50%;transform:translateX(-50%);border-radius:40px;overflow:hidden;background:#000}
+.content{position:absolute;left:50%;margin-left:-116px;top:0;width:232px;height:70px;opacity:0;z-index:2}
+.t{position:absolute;left:68px;top:12px;white-space:nowrap;font-family:system-ui,sans-serif}
+.t .s{font-size:9px;letter-spacing:.07em;color:rgba(255,255,255,.62);text-transform:uppercase;font-weight:600}
+.t .m{font-size:14px;font-weight:700;color:#fff;margin:2px 0}
+.t .f{font-size:10.5px;color:rgba(255,255,255,.62)}
+.av{position:absolute;left:16px;top:15px;width:40px;height:40px}
+.blue{background:linear-gradient(135deg,#2f8dff,#0b4fd1)}
+
+/* shared 6.6 s timeline: drop, expand, hold, shrink to circle, rise */
+.ab{animation:shapeAB 6.6s infinite}
+.ab .content{animation:fadeAB 6.6s infinite}
+@keyframes shapeAB{
+ 0%{top:-44px;width:44px;height:44px}
+ 5.3%{top:42px;width:44px;height:44px}
+ 7.6%{top:36px;width:44px;height:44px}
+ 12.9%{top:36px;width:250px;height:76px}
+ 16.7%{top:36px;width:232px;height:70px}
+ 75.8%{top:36px;width:232px;height:70px}
+ 84.8%{top:36px;width:44px;height:44px}
+ 89.4%{top:36px;width:44px;height:44px}
+ 97%{top:-44px;width:44px;height:44px}
+ 100%{top:-44px;width:44px;height:44px}}
+@keyframes fadeAB{0%,12.9%{opacity:0}17.4%,74%{opacity:1}78.8%,100%{opacity:0}}
+
+/* shared water drop avatar */
+.drop{position:absolute;left:6px;top:8px;width:28px;height:28px;background:#bfe3ff;border-radius:50% 0 50% 50%;transform:rotate(45deg);box-shadow:inset -4px -4px 0 rgba(0,90,200,.25)}
+.shine{position:absolute;left:21px;top:14px;width:5px;height:5px;border-radius:50%;background:#fff;opacity:.9}
+
+/* D: the pill itself fills with water */
+.level{position:absolute;inset:0;transform:translateY(100%);animation:levelD 6.6s infinite}
+@keyframes levelD{0%,16%{transform:translateY(100%)}45%{transform:translateY(10%)}60%{transform:translateY(10%)}70%{transform:translateY(100%)}100%{transform:translateY(100%)}}
+.crest{position:absolute;left:0;right:0;top:0;height:8px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'><path d='M0 8 V4 Q10 -1 20 4 T40 4 V8 Z' fill='rgba(47,141,255,0.88)'/></svg>") repeat-x;animation:slideW 1.1s linear infinite}
+@keyframes slideW{from{background-position-x:0}to{background-position-x:40px}}
+.wbody{position:absolute;left:0;right:0;top:7px;bottom:0;background:rgba(47,141,255,.88)}
+
+/* E: ripples when the circle lands */
+.ring{position:absolute;left:50%;top:58px;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid rgba(140,205,255,.9);border-radius:50%;opacity:0;animation:ripple 6.6s infinite;z-index:1}
+@keyframes ripple{0%,7%{opacity:0;transform:scale(.6)}8%{opacity:.95;transform:scale(1)}20%{opacity:0;transform:scale(5)}100%{opacity:0;transform:scale(5)}}
+
+/* F: glass counter */
+.dots{position:absolute;left:68px;top:46px;display:flex;gap:5px}
+.dots i{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.45);box-sizing:border-box}
+.dots i.on{background:#4fb3ff;border-color:#4fb3ff}
+.dots i.pop{animation:popF 6.6s infinite}
+@keyframes popF{0%,24%{background:transparent;border-color:rgba(255,255,255,.45);transform:scale(1)}27%{transform:scale(1.9);background:#4fb3ff;border-color:#4fb3ff}31%,100%{transform:scale(1);background:#4fb3ff;border-color:#4fb3ff}}
+.glass{position:absolute;left:6px;top:2px;width:28px;height:36px;border:3px solid #cfe9ff;border-top-width:2px;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);box-sizing:border-box;background:rgba(255,255,255,.08);overflow:hidden}
+.glass b{position:absolute;left:0;right:0;bottom:0;height:72%;background:#4fb3ff}
+
+/* G: goldfish bowl */
+.bowl{position:absolute;left:3px;top:3px;width:34px;height:34px;border-radius:50%;border:2px solid #cfe9ff;box-sizing:border-box;overflow:hidden;background:rgba(79,179,255,.35)}
+.fish{position:absolute;left:5px;top:12px;width:16px;height:10px;background:#ff9f1c;border-radius:50%;animation:swim 2.4s infinite ease-in-out alternate}
+.fish::before{content:"";position:absolute;right:-6px;top:1px;border-left:7px solid #ff9f1c;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.fish::after{content:"";position:absolute;left:3px;top:2px;width:3px;height:3px;border-radius:50%;background:#111}
+@keyframes swim{from{transform:translate(0,0)}to{transform:translate(8px,-3px)}}
+.bub{position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;border:1px solid #fff;animation:rise 1.6s infinite}
+@keyframes rise{0%{transform:translateY(0);opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+
+/* H: wilting plant that perks up */
+.pot{position:absolute;left:11px;bottom:1px;width:18px;height:10px;background:#b86b3a;clip-path:polygon(0 0,100% 0,85% 100%,15% 100%)}
+.stem{position:absolute;left:19px;top:12px;width:3px;height:18px;background:#4caf50;border-radius:2px;animation:stemH 6.6s infinite;transform-origin:50% 100%}
+.leaf{position:absolute;top:13px;width:14px;height:7px;background:#66d46f;border-radius:50%}
+.leaf.l{left:6px;transform-origin:100% 50%;animation:leafL 6.6s infinite}
+.leaf.r{left:21px;transform-origin:0 50%;animation:leafR 6.6s infinite}
+@keyframes leafL{0%,24%{transform:rotate(-62deg)}30%{transform:rotate(14deg)}34%{transform:rotate(-8deg)}38%,100%{transform:rotate(0)}}
+@keyframes leafR{0%,24%{transform:rotate(62deg)}30%{transform:rotate(-14deg)}34%{transform:rotate(8deg)}38%,100%{transform:rotate(0)}}
+@keyframes stemH{0%,24%{transform:rotate(-14deg)}30%{transform:rotate(4deg)}38%,100%{transform:rotate(0)}}
+.wdrop{position:absolute;left:18px;top:-8px;width:6px;height:6px;background:#7cc4ff;border-radius:50% 0 50% 50%;transform:rotate(45deg);opacity:0;animation:fallH 6.6s infinite}
+@keyframes fallH{0%,21%{opacity:0;top:-10px}22%{opacity:1;top:-10px}27%{opacity:1;top:14px}28%,100%{opacity:0;top:14px}}
+
+/* I: bubble that floats down and pops */
+.bubble{position:absolute;left:50%;border-radius:50%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.75),rgba(120,195,255,.55) 28%,rgba(30,110,230,.82) 75%);box-shadow:inset 0 0 14px rgba(255,255,255,.35),0 6px 18px rgba(0,0,0,.35);animation:bubbleI 6.6s infinite;transform:translateX(-50%)}
+@keyframes bubbleI{
+ 0%{top:-44px;width:44px;height:44px;opacity:1;transform:translateX(-50%) scale(1)}
+ 5.3%{top:42px;width:44px;height:44px}
+ 7.6%{top:36px;width:44px;height:44px}
+ 12%{top:36px;width:146px;height:146px}
+ 15%{top:36px;width:132px;height:132px}
+ 73%{top:36px;width:132px;height:132px;opacity:1;transform:translateX(-50%) scale(1)}
+ 75.5%{top:36px;width:132px;height:132px;opacity:1;transform:translateX(-50%) scale(1.14)}
+ 77%{top:36px;width:132px;height:132px;opacity:0;transform:translateX(-50%) scale(1.32)}
+ 100%{top:36px;width:132px;height:132px;opacity:0;transform:translateX(-50%) scale(1.32)}}
+.btext{position:absolute;left:50%;top:36px;width:132px;height:132px;margin-left:-66px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:system-ui,sans-serif;opacity:0;animation:btextI 6.6s infinite;z-index:2}
+@keyframes btextI{0%,14%{opacity:0}19%,72%{opacity:1}74%,100%{opacity:0}}
+.btext .s{font-size:8.5px;letter-spacing:.07em;color:rgba(255,255,255,.8);text-transform:uppercase;font-weight:600}
+.btext .m{font-size:15px;font-weight:800;color:#fff;margin:3px 0;line-height:1.1}
+.btext .f{font-size:9.5px;color:rgba(255,255,255,.8)}
+.pt{position:absolute;left:50%;top:102px;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50% 0 50% 50%;background:#8fd0ff;opacity:0;animation:burst 6.6s infinite;z-index:1}
+@keyframes burst{0%,75%{opacity:0;transform:translate(0,0) rotate(45deg)}76%{opacity:1}84%{opacity:0;transform:translate(var(--x),var(--y)) rotate(45deg)}100%{opacity:0}}
+</style>
+
+<h2>6 more water reminder ideas</h2>
+<p class="subtitle">D to I. All loop; the first five reuse the circle-then-pill motion, I pops instead. Click your favourite (or two).</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="D-pill-fills" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage"><div class="shape ab"><div class="level"><div class="crest"></div><div class="wbody"></div></div>
+        <div class="content">
+          <div class="av"><div class="drop"></div><div class="shine"></div></div>
+          <div class="t"><div class="s">Hydration &middot; now</div><div class="m">Fill me up.</div><div class="f">from: your kidneys</div></div>
+        </div></div></div></div></div>
+    <div class="card-body"><h3>D. The pill fills with water</h3><p>Black pill. Real-looking water sloshes up inside it, then drains away like a gulp.</p></div>
+  </div>
+
+  <div class="card" data-choice="E-ripples" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage"><div class="ring"></div><div class="ring" style="animation-delay:.2s"></div><div class="ring" style="animation-delay:.4s"></div>
+        <div class="shape ab blue"><div class="content">
+          <div class="av"><div class="drop"></div><div class="shine"></div></div>
+          <div class="t"><div class="s">Hydration &middot; now</div><div class="m">Make a splash.</div><div class="f">from: your kidneys</div></div>
+        </div></div></div></div></div>
+    <div class="card-body"><h3>E. Landing ripples</h3><p>Blue circle drops in like a water drop and sends ripples across the screen before growing into the pill.</p></div>
+  </div>
+
+  <div class="card" data-choice="F-glass-counter" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage"><div class="shape ab"><div class="content">
+          <div class="av"><div class="glass"><b></b></div></div>
+          <div class="t"><div class="s">Hydration &middot; today</div><div class="m">Glass 3 of 8</div></div>
+          <div class="dots"><i class="on"></i><i class="on"></i><i class="pop"></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div></div></div></div></div>
+    <div class="card-body"><h3>F. Daily glass counter</h3><p>Shows how many glasses you've had today. The next dot pops in as you read it. Gives it a goal, not just a nag.</p></div>
+  </div>
+
+  <div class="card" data-choice="G-goldfish" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage"><div class="shape ab"><div class="content">
+          <div class="av"><div class="bowl"><div class="fish"></div><div class="bub" style="left:8px"></div><div class="bub" style="left:20px;animation-delay:.7s"></div></div></div>
+          <div class="t"><div class="s">Hydration &middot; now</div><div class="m">Bubbles drinks more.</div><div class="f">from: Bubbles the fish</div></div>
+        </div></div></div></div></div>
+    <div class="card-body"><h3>G. Goldfish shames you</h3><p>A swimming goldfish in a bowl, blowing bubbles. Goofy, in the same spirit as the googly eye.</p></div>
+  </div>
+
+  <div class="card" data-choice="H-wilting-plant" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage"><div class="shape ab"><div class="content">
+          <div class="av"><div class="wdrop"></div><div class="stem"></div><div class="leaf l"></div><div class="leaf r"></div><div class="pot"></div></div>
+          <div class="t"><div class="s">Hydration &middot; now</div><div class="m">You're wilting.</div><div class="f">from: your inner houseplant</div></div>
+        </div></div></div></div></div>
+    <div class="card-body"><h3>H. Wilting houseplant</h3><p>A droopy little plant. A water drop lands on it and it perks right up.</p></div>
+  </div>
+
+  <div class="card" data-choice="I-bubble-pop" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="scr"><div class="bar"></div><div class="notch"></div>
+      <div class="stage">
+        <div class="pt" style="--x:-80px;--y:-10px"></div><div class="pt" style="--x:80px;--y:-10px"></div>
+        <div class="pt" style="--x:-58px;--y:-62px"></div><div class="pt" style="--x:58px;--y:-62px"></div>
+        <div class="pt" style="--x:-60px;--y:58px"></div><div class="pt" style="--x:60px;--y:58px"></div>
+        <div class="pt" style="--x:0px;--y:-84px"></div><div class="pt" style="--x:0px;--y:76px"></div>
+        <div class="bubble"></div>
+        <div class="btext"><div class="s">Hydration &middot; now</div><div class="m">Drink<br>water!</div><div class="f">from: your kidneys</div></div>
+      </div></div></div>
+    <div class="card-body"><h3>I. Floating bubble, then pop</h3><p>A shiny soap-bubble floats down from the notch with the message inside, wobbles, then pops into little droplets.</p></div>
+  </div>
+
+</div>

@@ -70,6 +70,22 @@ import Testing
         }
     }
 
+    @Test func bouncingEyeballFitsTheWindowAndSitsAboveItsCaption() {
+        for display in [testLaptop, testExternal] {
+            let g = PillGeometry(display: display)
+            let hidden = g.ballFrame(drop: 0)
+            #expect(hidden.maxY <= 0)
+            #expect(g.ballFrame(drop: 1).minY == g.restTop)
+            #expect(g.ballFrame(drop: 1).maxY <= g.captionTop)
+            #expect(g.captionTop + PillGeometry.captionSize.height <= g.windowSize.height)
+            for t in samples {
+                let s = PillAnimation.state(at: t, style: .bouncingEyeball)
+                let f = g.ballFrame(drop: s.drop)
+                #expect(f.minX >= 0 && f.maxX <= g.windowSize.width && f.maxY <= g.windowSize.height)
+            }
+        }
+    }
+
     @Test func windowFrameIsCentredAndTopAligned() {
         let notch = PillGeometry(display: testLaptop).windowFrame(on: testLaptop)
         #expect(notch.maxY == testLaptop.frame.maxY)

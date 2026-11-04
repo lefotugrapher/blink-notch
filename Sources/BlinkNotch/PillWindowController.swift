@@ -43,12 +43,12 @@ final class PillWindowController: PillPresenting {
         }
     }
 
-    func present(message: Message, on display: DisplayInfo) {
+    func present(message: Message, style: BlinkStyle, on display: DisplayInfo) {
         guard !isPresenting else { return }
         let geometry = PillGeometry(display: display)
         let frame = geometry.windowFrame(on: display)
         let panel = PillPanel(frame: frame)
-        panel.contentView = NSHostingView(rootView: PillView(geometry: geometry, message: message, startDate: Date(), freezeAt: debugFreezeAt))
+        panel.contentView = NSHostingView(rootView: PillView(geometry: geometry, message: message, style: style, startDate: Date(), freezeAt: debugFreezeAt))
         panel.setFrame(frame, display: false)
         panel.orderFrontRegardless()
         self.panel = panel

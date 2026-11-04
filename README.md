@@ -6,6 +6,13 @@ A menu-bar-only Mac app that reminds you to blink. Every so often a circle drops
 
 Design: `docs/superpowers/specs/2026-11-04-blink-notch-design.md` (mockups next to it). Plan: `docs/superpowers/plans/`.
 
+## Animation styles
+
+Every reminder uses a different animation from the last (never the same twice in a row), picked at random from 11:
+the original eye, a white pill that is the eye, fluttering lashes, a slow-blinking cat, two little eyes, a
+3-2-1 countdown with a flash, a windshield wiper, a camera shutter, a sleepy eye with Zs, a buffering eye, and a
+bouncing eyeball with no pill. The mockups they came from are in `docs/superpowers/specs/assets/`.
+
 ## Build, test, install
 
 Only the Xcode Command Line Tools are needed (no Xcode.app).
@@ -35,6 +42,7 @@ Launch `build/Blink Notch.app/Contents/MacOS/BlinkNotch` with:
 - `--preview`: show one pill about a second after launch
 - `--freeze-at <seconds>`: show one pill held at that moment of the 6.6 s animation (for screenshots)
 - `--message <index>`: use only that message from the pool
+- `--style <name>`: use only one style (`classic`, `pillEye`, `lashes`, `slowCat`, `twoEyes`, `countdown`, `wiper`, `shutter`, `sleepy`, `buffering`, `bouncingEyeball`)
 - `--dump-menu`: print the menu and exit
 - `--login-item-selftest`: register and unregister the login item once, printing the status
 - env `BLINKNOTCH_DEBUG_INTERVAL_SECONDS=15`: replace the interval (menu choices keep working but use this value)

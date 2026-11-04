@@ -12,7 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var activity: NSObjectProtocol?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Debug switches: --preview, --freeze-at <seconds>, --message <index>, --dump-menu,
+        // Debug switches: --preview, --freeze-at <seconds>, --message <index>, --style <name>, --dump-menu,
         // and env BLINKNOTCH_DEBUG_INTERVAL_SECONDS to replace the interval.
         activity = ProcessInfo.processInfo.beginActivity(
             options: .userInitiatedAllowingIdleSystemSleep, reason: "Blink reminder timer")
@@ -26,11 +26,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let index = value(after: "--message").flatMap(Int.init), MessagePool.all.indices.contains(index) {
             pool = MessagePool(messages: [MessagePool.all[index]])
         }
+        var styles = BlinkStylePicker()
+        if let raw = value(after: "--style"), let style = BlinkStyle(rawValue: raw) {
+            styles = BlinkStylePicker(styles: [style])
+        }
         let intervalOverride = ProcessInfo.processInfo.environment["BLINKNOTCH_DEBUG_INTERVAL_SECONDS"]
             .flatMap(Double.init)
 
         let coordinator = ReminderCoordinator(presenter: pillController, screens: SystemScreens(),
-                                              settings: Settings(), pool: pool,
+                                              settings: Settings(), pool: pool, styles: styles,
                                               intervalOverride: intervalOverride)
         self.coordinator = coordinator
         let menuBar = MenuBarController(coordinator: coordinator)

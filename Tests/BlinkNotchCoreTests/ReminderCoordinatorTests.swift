@@ -5,9 +5,9 @@ import Testing
 @MainActor final class FakePresenter: PillPresenting {
     nonisolated init() {}
     var isPresenting = false
-    var presented: [(message: Message, display: DisplayInfo)] = []
-    func present(message: Message, on display: DisplayInfo) {
-        presented.append((message, display))
+    var presented: [(message: Message, style: BlinkStyle, display: DisplayInfo)] = []
+    func present(message: Message, style: BlinkStyle, on display: DisplayInfo) {
+        presented.append((message, style, display))
         isPresenting = true
     }
 }
@@ -49,6 +49,17 @@ struct FakeScreens: ScreenProviding {
         clock.now = clock.now + 1200
         c.timerFired()
         #expect(presenter.presented.count == 1)
+    }
+
+    @Test func eachReminderUsesADifferentStyleThanTheLast() {
+        let c = make()
+        for _ in 0..<40 {
+            presenter.isPresenting = false
+            #expect(c.showNow())
+        }
+        let styles = presenter.presented.map(\.style)
+        for i in 1..<styles.count { #expect(styles[i] != styles[i - 1]) }
+        #expect(Set(styles).count > 3)
     }
 
     @Test func noDisplaysDoesNothing() {
