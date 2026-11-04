@@ -1,0 +1,124 @@
+<style>
+.scr{position:relative;width:100%;height:215px;border-radius:10px;overflow:hidden;background:linear-gradient(160deg,#27324d,#3b2a52 60%,#5a3a66)}
+.bar{position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,.6);z-index:5}
+.notch{position:absolute;top:0;left:50%;width:120px;height:26px;margin-left:-60px;background:#000;border-radius:0 0 14px 14px;z-index:6}
+.stage{position:absolute;inset:0;overflow:hidden;z-index:3}
+.env{position:absolute;left:50%;top:0;width:100px;height:70px;margin-left:-50px}
+.wob{position:absolute;inset:0}
+.paper{position:absolute;inset:0;background:#f7f1e1;border:3px solid #1a1a1a;border-radius:8px;box-sizing:border-box}
+.tri{position:absolute;left:3px;right:3px;top:3px;height:34px;background:#e6dcc0;clip-path:polygon(0 0,100% 0,50% 100%)}
+
+/* ---------- A: googly ---------- */
+.a.env{animation:dropA 6s infinite}
+@keyframes dropA{0%{transform:translateY(-80px)}8%{transform:translateY(52px)}11%{transform:translateY(34px)}14%{transform:translateY(42px)}72%{transform:translateY(42px)}80%{transform:translateY(-80px)}100%{transform:translateY(-80px)}}
+.a .wob{animation:wobA .5s infinite alternate ease-in-out}
+@keyframes wobA{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.a .eye{position:absolute;top:16px;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid #1a1a1a;overflow:hidden;box-sizing:border-box}
+.a .eye.l{left:12px}.a .eye.r{left:58px}
+.a .pupil{position:absolute;left:6px;top:6px;width:9px;height:9px;border-radius:50%;background:#000;animation:googly .7s infinite ease-in-out}
+.a .eye.r .pupil{animation-duration:.9s}
+@keyframes googly{0%,100%{transform:translate(-3px,3px)}25%{transform:translate(4px,4px)}50%{transform:translate(2px,-3px)}75%{transform:translate(-4px,-1px)}}
+.a .lid{position:absolute;inset:-1px;background:#d9ccaa;border-bottom:3px solid #1a1a1a;transform:translateY(-105%);animation:lidA 6s infinite}
+.a .eye.r .lid{animation-delay:.14s}
+@keyframes lidA{0%,18%{transform:translateY(-105%)}20%{transform:translateY(0)}23%{transform:translateY(-105%)}34%{transform:translateY(-105%)}36%{transform:translateY(0)}39%{transform:translateY(-105%)}50%{transform:translateY(-105%)}52%{transform:translateY(0)}62%{transform:translateY(0)}65%{transform:translateY(-105%)}100%{transform:translateY(-105%)}}
+.a .mouth{position:absolute;left:38px;top:50px;width:24px;height:11px;border:3px solid #1a1a1a;border-top:none;border-radius:0 0 24px 24px;box-sizing:border-box;transform-origin:top;animation:chat .3s infinite alternate}
+@keyframes chat{from{transform:scaleY(.5)}to{transform:scaleY(1.2)}}
+
+/* ---------- B: flap slam ---------- */
+.b.env{animation:dropB 6s infinite}
+@keyframes dropB{0%{transform:translateY(-80px)}8%{transform:translateY(76px)}11%{transform:translateY(58px)}14%{transform:translateY(66px)}72%{transform:translateY(66px)}80%{transform:translateY(-80px)}100%{transform:translateY(-80px)}}
+.b .wob{transform-origin:50% 100%;animation:thumpB 6s infinite}
+@keyframes thumpB{0%,20%,36%,52%{transform:scale(1,1)}21.5%,37.5%,53.5%{transform:scale(1.07,.88)}25%,41%,57%{transform:scale(.97,1.04)}28%,44%,60%,100%{transform:scale(1,1)}}
+.b .eyeball{position:absolute;left:22px;top:16px;width:54px;height:40px;border-radius:50%;background:#fff;border:3px solid #1a1a1a;box-sizing:border-box;overflow:hidden}
+.b .pupil{position:absolute;left:16px;top:8px;width:16px;height:16px;border-radius:50%;background:#1a1a1a;animation:lookB 6s infinite}
+.b .pupil::after{content:"";position:absolute;left:3px;top:3px;width:5px;height:5px;border-radius:50%;background:#fff}
+@keyframes lookB{0%,12%{transform:translate(0,0)}16%{transform:translate(-12px,2px)}19%{transform:translate(-12px,2px)}26%{transform:translate(10px,-2px)}33%{transform:translate(10px,-2px)}42%{transform:translate(-4px,5px)}50%{transform:translate(0,0)}100%{transform:translate(0,0)}}
+.b .flap{position:absolute;left:3px;right:3px;top:3px;height:62px;background:#e6dcc0;border-top:0;clip-path:polygon(0 0,100% 0,100% 52%,50% 100%,0 52%);transform-origin:50% 0;animation:slamB 6s infinite}
+@keyframes slamB{0%,18%{transform:scaleY(-.55)}20%{transform:scaleY(1)}23%{transform:scaleY(-.55)}34%{transform:scaleY(-.55)}36%{transform:scaleY(1)}39%{transform:scaleY(-.55)}50%{transform:scaleY(-.55)}52%{transform:scaleY(1)}62%{transform:scaleY(1)}65%{transform:scaleY(-.55)}100%{transform:scaleY(-.55)}}
+
+/* ---------- C: wink + tongue ---------- */
+.c.env{animation:dropC 6s infinite}
+@keyframes dropC{0%{transform:translateY(-80px)}8%{transform:translateY(62px)}11%{transform:translateY(44px)}14%{transform:translateY(52px)}72%{transform:translateY(52px)}80%{transform:translateY(-80px)}100%{transform:translateY(-80px)}}
+.c .wob{transform-origin:50% 100%;animation:squashC 6s infinite}
+@keyframes squashC{0%,19%{transform:scale(1,1)}20.5%{transform:scale(1.1,.86)}24%{transform:scale(.94,1.1)}28%,41%{transform:scale(1,1)}42.5%{transform:scale(1.12,.84)}46%{transform:scale(.94,1.1)}50%,58%{transform:scale(1,1)}59.5%{transform:scale(1.1,.88)}63%{transform:scale(.96,1.07)}67%,100%{transform:scale(1,1)}}
+.c .ce{position:absolute;top:20px;width:12px;height:17px;border-radius:50%;background:#1a1a1a;transform-origin:50% 50%}
+.c .ce::after{content:"";position:absolute;left:2px;top:3px;width:4px;height:4px;border-radius:50%;background:#fff}
+.c .ce.l{left:28px;animation:eyeL 6s infinite}
+.c .ce.r{left:60px;animation:eyeR 6s infinite}
+@keyframes eyeL{0%,40%{transform:scaleY(1)}43%,48%{transform:scaleY(.1)}51%,56%{transform:scaleY(1)}59%,64%{transform:scaleY(.1)}67%,100%{transform:scaleY(1)}}
+@keyframes eyeR{0%,19%{transform:scaleY(1)}22%,32%{transform:scaleY(.1)}35%,40%{transform:scaleY(1)}43%,48%{transform:scaleY(.1)}51%,56%{transform:scaleY(1)}59%,64%{transform:scaleY(.1)}67%,100%{transform:scaleY(1)}}
+.c .cheek{position:absolute;top:38px;width:11px;height:7px;border-radius:50%;background:#ff8fa3;opacity:.75}
+.c .cheek.l{left:14px}.c .cheek.r{left:75px}
+.c .cm{position:absolute;left:40px;top:42px;width:20px;height:11px;background:#7a1f2b;border-radius:0 0 20px 20px;border:3px solid #1a1a1a;border-top-width:2px;box-sizing:border-box}
+.c .tongue{position:absolute;left:44px;top:50px;width:12px;height:13px;background:#ff6f91;border:2px solid #1a1a1a;border-radius:0 0 12px 12px;box-sizing:border-box;transform-origin:50% 0;transform:scaleY(0);animation:tongueC 6s infinite;z-index:2}
+@keyframes tongueC{0%,20%{transform:scaleY(0)}24%,34%{transform:scaleY(1)}38%,100%{transform:scaleY(0)}}
+.c .bub{position:absolute;left:96px;top:-12px;background:#fff;color:#111;font:800 13px/1 system-ui,sans-serif;padding:6px 9px;border-radius:12px;border:2px solid #1a1a1a;transform:scale(0);transform-origin:0 100%;animation:popC 6s infinite;white-space:nowrap}
+@keyframes popC{0%,36%{transform:scale(0)}39%{transform:scale(1.2)}41%{transform:scale(1)}67%{transform:scale(1)}70%,100%{transform:scale(0)}}
+</style>
+
+<h2>How should the blinking email look?</h2>
+<p class="subtitle">Each one drops out of the notch, blinks a few times, then goes back up. They loop, so just watch.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="googly" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="scr">
+        <div class="bar"></div><div class="notch"></div>
+        <div class="stage">
+          <div class="a env"><div class="wob">
+            <div class="paper"></div><div class="tri"></div>
+            <div class="eye l"><div class="pupil"></div><div class="lid"></div></div>
+            <div class="eye r"><div class="pupil"></div><div class="lid"></div></div>
+            <div class="mouth"></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Googly chaos</h3>
+      <p>Wobbling envelope with googly eyes. The eyes blink out of sync, and one stays shut a beat too long.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="flap-slam" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="scr">
+        <div class="bar"></div><div class="notch"></div>
+        <div class="stage">
+          <div class="b env"><div class="wob">
+            <div class="paper"></div>
+            <div class="eyeball"><div class="pupil"></div></div>
+            <div class="flap"></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Flap slam</h3>
+      <p>One big eyeball inside the envelope. The flap is the eyelid, so it slams shut and pops open again, squashing the whole thing.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="wink-tongue" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="scr">
+        <div class="bar"></div><div class="notch"></div>
+        <div class="stage">
+          <div class="c env"><div class="wob">
+            <div class="paper"></div><div class="tri"></div>
+            <div class="ce l"></div><div class="ce r"></div>
+            <div class="cheek l"></div><div class="cheek r"></div>
+            <div class="cm"></div><div class="tongue"></div>
+          </div>
+          <div class="bub">blink!</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Wink and tongue</h3>
+      <p>Cute face. Winks with the tongue out, then blinks twice, and a speech bubble says "blink!". Squashes and stretches on every blink.</p>
+    </div>
+  </div>
+
+</div>
