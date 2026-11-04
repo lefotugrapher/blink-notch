@@ -1,6 +1,6 @@
 # Blink Notch
 
-A menu-bar-only Mac app that reminds you to blink. Every so often the notch stretches down into a fake
+A menu-bar-only Mac app that reminds you to blink. Every so often a circle drops out from behind the notch and grows into a fake
 "new mail" banner. A cartoon eye is the sender's avatar and its eyelid slams shut a few times:
 **MAIL · NOW / Blink, you goof. / from: your eyeballs**. The email is fake; there is no mail access and no network.
 
@@ -23,8 +23,8 @@ same reason (see `Tests/BlinkNotchCoreTests/FoundationSupport.swift`).
 ## Using it
 
 Menu bar eye icon: **Show one now**, **Pause / Resume**, **Every** (10 / 20 / 30 / 60 minutes, default 20),
-**Launch at login**, **Quit**. The reminder appears on the screen your cursor is on: the notch animation on the
-MacBook screen, the same pill dropping below the menu bar on a screen without a notch. It never takes keyboard
+**Launch at login**, **Quit**. The reminder appears on the screen your cursor is on: a circle dropping out of the notch on the
+MacBook screen, the same thing from just below the menu bar on a screen without a notch. It never takes keyboard
 focus, clicks pass through it, and nothing fires while the screen is asleep or locked (the countdown restarts
 from a full interval when you wake or unlock).
 
@@ -33,7 +33,7 @@ from a full interval when you wake or unlock).
 Launch `build/Blink Notch.app/Contents/MacOS/BlinkNotch` with:
 
 - `--preview`: show one pill about a second after launch
-- `--freeze-at <seconds>`: show one pill held at that moment of the 6 s animation (for screenshots)
+- `--freeze-at <seconds>`: show one pill held at that moment of the 6.6 s animation (for screenshots)
 - `--message <index>`: use only that message from the pool
 - `--dump-menu`: print the menu and exit
 - `--login-item-selftest`: register and unregister the login item once, printing the status

@@ -3,20 +3,46 @@ import Testing
 @testable import BlinkNotchCore
 
 @Suite struct PillAnimationTests {
-    private let samples = stride(from: 0.0, through: 6.0, by: 0.01).map { $0 }
+    private let samples = stride(from: 0.0, through: PillAnimation.duration, by: 0.01).map { $0 }
 
-    @Test func startsCollapsedAndInvisible() {
+    @Test func startsHiddenAsACircle() {
         let s = PillAnimation.state(at: 0)
-        #expect(s.progress == 0)
+        #expect(s.drop == 0)
+        #expect(s.expansion == 0)
         #expect(s.contentOpacity == 0)
         #expect(s.lidClosure == 0)
         #expect(!s.isFinished)
     }
 
-    @Test func overshootsThenSettles() {
-        let peak = PillAnimation.state(at: 0.55).progress
+    @Test func dropsOvershootsThenSettlesBeforeExpanding() {
+        let peak = PillAnimation.state(at: 0.35).drop
         #expect(peak > 1.0 && peak <= PillAnimation.maxProgress)
-        #expect(abs(PillAnimation.state(at: 1.0).progress - 1) < 0.001)
+        let arrived = PillAnimation.state(at: 0.5)
+        #expect(abs(arrived.drop - 1) < 0.001)
+        #expect(arrived.expansion == 0)
+    }
+
+    @Test func expandsToAPillWithASlightOvershoot() {
+        let peak = PillAnimation.state(at: 0.85).expansion
+        #expect(peak > 1.0 && peak <= PillAnimation.maxProgress)
+        #expect(abs(PillAnimation.state(at: 1.1).expansion - 1) < 0.001)
+    }
+
+    // The user wants to see the final circle before it goes back up.
+    @Test func becomesACircleAgainAndIsSeenBeforeRising() {
+        let seen = PillAnimation.state(at: 5.75)
+        #expect(seen.expansion == 0)
+        #expect(seen.drop == 1)
+        #expect(seen.contentOpacity == 0)
+        // And it is up again by the end.
+        #expect(PillAnimation.state(at: PillAnimation.duration).drop == 0)
+    }
+
+    @Test func neverMovesAndChangesShapeAtTheSameTime() {
+        for t in samples {
+            let s = PillAnimation.state(at: t)
+            if s.expansion > 0.001 { #expect(s.drop >= 0.999) }
+        }
     }
 
     @Test func lidShutAtEachSlam() {
@@ -34,22 +60,23 @@ import Testing
     }
 
     @Test func finishesAtDuration() {
-        let s = PillAnimation.state(at: 6.0)
+        let s = PillAnimation.state(at: PillAnimation.duration)
         #expect(s.isFinished)
-        #expect(s.progress == 0)
+        #expect(s.drop == 0)
+        #expect(s.expansion == 0)
         #expect(s.contentOpacity == 0)
     }
 
     @Test func clampsOutOfRangeAndNaN() {
         #expect(PillAnimation.state(at: -3) == PillAnimation.state(at: 0))
-        #expect(PillAnimation.state(at: 600) == PillAnimation.state(at: 6.0))
+        #expect(PillAnimation.state(at: 600) == PillAnimation.state(at: PillAnimation.duration))
         #expect(PillAnimation.state(at: .nan) == PillAnimation.state(at: 0))
     }
 
-    @Test func neverExceedsMaxProgressOrGoesNegative() {
+    @Test func neverExceedsMaxOrGoesNegative() {
         for t in samples {
-            let p = PillAnimation.state(at: t).progress
-            #expect(p >= 0 && p <= PillAnimation.maxProgress)
+            let s = PillAnimation.state(at: t)
+            for v in [s.drop, s.expansion] { #expect(v >= 0 && v <= PillAnimation.maxProgress) }
         }
     }
 
@@ -67,11 +94,19 @@ import Testing
         }
     }
 
+    @Test func contentIsGoneBeforeThePillShrinksSmall() {
+        for t in samples {
+            let s = PillAnimation.state(at: t)
+            if s.expansion < 0.6 { #expect(s.contentOpacity == 0) }
+        }
+    }
+
     @Test func noPopping() {
         var previous = PillAnimation.state(at: 0)
         for t in samples.dropFirst() {
             let s = PillAnimation.state(at: t)
-            #expect(abs(s.progress - previous.progress) < 0.2)
+            #expect(abs(s.drop - previous.drop) < 0.2)
+            #expect(abs(s.expansion - previous.expansion) < 0.2)
             #expect(abs(s.lidClosure - previous.lidClosure) < 0.6)
             previous = s
         }

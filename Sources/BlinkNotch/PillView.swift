@@ -13,22 +13,24 @@ struct PillView: View {
         TimelineView(.animation(minimumInterval: nil, paused: freezeAt != nil)) { context in
             let t = freezeAt ?? context.date.timeIntervalSince(startDate)
             let state = PillAnimation.state(at: t)
-            let shape = PillShape(geometry: geometry, progress: state.progress)
+            let rect = geometry.shapeFrame(drop: state.drop, expansion: state.expansion)
+            let pill = geometry.pillSize
             ZStack(alignment: .topLeading) {
-                shape.fill(Color.black)
+                Capsule().fill(Color.black)
+                    .frame(width: rect.width, height: rect.height)
+                    .offset(x: rect.minX, y: rect.minY)
                 content(state)
-                    .frame(width: geometry.bodySize.width, height: geometry.bodySize.height, alignment: .leading)
+                    .frame(width: pill.width, height: pill.height, alignment: .leading)
                     .opacity(state.contentOpacity)
-                    .offset(x: (geometry.windowSize.width - geometry.bodySize.width) / 2,
-                            y: bodyTop(state))
-                    .clipShape(shape)
+                    .offset(x: (geometry.windowSize.width - pill.width) / 2, y: rect.minY)
+                    .mask(alignment: .topLeading) {
+                        Capsule()
+                            .frame(width: rect.width, height: rect.height)
+                            .offset(x: rect.minX, y: rect.minY)
+                    }
             }
             .frame(width: geometry.windowSize.width, height: geometry.windowSize.height, alignment: .topLeading)
         }
-    }
-
-    private func bodyTop(_ state: PillFrameState) -> CGFloat {
-        geometry.style == .notch ? geometry.neckSize.height : geometry.floatingTop(progress: state.progress)
     }
 
     private func content(_ state: PillFrameState) -> some View {
@@ -50,7 +52,7 @@ struct PillView: View {
                     .foregroundStyle(Color.secondaryText)
                     .lineLimit(1)
             }
-            .frame(width: geometry.bodySize.width - 70 - 14, alignment: .leading)
+            .frame(width: geometry.pillSize.width - 70 - 14, alignment: .leading)
             .offset(x: 70)
         }
     }

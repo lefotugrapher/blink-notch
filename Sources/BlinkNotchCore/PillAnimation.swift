@@ -3,9 +3,11 @@ import Foundation
 
 /// Everything the pill view needs to draw one frame.
 public struct PillFrameState: Equatable, Sendable {
-    /// 0 = collapsed into the notch (or hidden above the screen), 1 = settled.
+    /// 0 = hidden above the window (behind the notch), 1 = resting spot.
     /// Briefly above 1 during the overshoot, never beyond `PillAnimation.maxProgress`.
-    public let progress: Double
+    public let drop: Double
+    /// 0 = circle, 1 = full pill. Never changes while `drop` is moving.
+    public let expansion: Double
     public let contentOpacity: Double
     /// 0 = eyelid open, 1 = shut.
     public let lidClosure: Double
@@ -19,13 +21,14 @@ public struct PillFrameState: Equatable, Sendable {
 /// The whole reminder as a pure function of time, so it is deterministic and testable.
 /// Timings come from the approved mockup, shifted to start at t = 0; tune by eye.
 public enum PillAnimation {
-    public static let duration: TimeInterval = 6.0
+    public static let duration: TimeInterval = 6.6
     public static let maxProgress = PillGeometry.maxProgress
 
     public static func state(at time: TimeInterval) -> PillFrameState {
         let t = time.isNaN ? 0 : min(max(time, 0), duration)
         return PillFrameState(
-            progress: progress.value(at: t),
+            drop: drop.value(at: t),
+            expansion: expansion.value(at: t),
             contentOpacity: content.value(at: t),
             lidClosure: lid.value(at: t),
             pupil: CGVector(dx: pupilX.value(at: t), dy: pupilY.value(at: t)),
@@ -35,12 +38,19 @@ public enum PillAnimation {
 
     // MARK: Tracks
 
-    private static let progress = Track([
-        (0, 0), (0.55, 1.12), (0.8, 0.96), (1.0, 1.0), (5.0, 1.0), (5.9, 0), (6.0, 0),
+    /// Circle drops out of the notch, rests, and rises back at the very end.
+    private static let drop = Track([
+        (0, 0), (0.35, 1.12), (0.5, 1.0), (5.9, 1.0), (6.4, 0), (duration, 0),
+    ])
+
+    /// Circle grows into the pill once it has landed, and is a circle again,
+    /// held in view for 0.3 s, before it rises.
+    private static let expansion = Track([
+        (0, 0), (0.5, 0), (0.85, 1.08), (1.1, 1.0), (5.0, 1.0), (5.6, 0), (duration, 0),
     ])
 
     private static let content = Track([
-        (0, 0), (0.6, 0), (1.05, 1), (4.9, 1), (5.25, 0), (6.0, 0),
+        (0, 0), (0.85, 0), (1.15, 1), (4.9, 1), (5.2, 0), (duration, 0),
     ])
 
     /// Three slams: the first two are quick, the third is held shut a beat longer.
@@ -49,14 +59,14 @@ public enum PillAnimation {
         (1.25, 0), (1.33, 1), (1.45, 1), (1.60, 0),
         (2.25, 0), (2.33, 1), (2.45, 1), (2.60, 0),
         (3.25, 0), (3.33, 1), (3.85, 1), (4.05, 0),
-        (6.0, 0),
+        (duration, 0),
     ], easing: .linear)
 
     private static let pupilX = Track([
-        (0, 0), (0.9, 0), (1.3, -1), (2.2, 1), (3.0, -0.4), (4.0, 0), (6.0, 0),
+        (0, 0), (0.9, 0), (1.3, -1), (2.2, 1), (3.0, -0.4), (4.0, 0), (duration, 0),
     ])
     private static let pupilY = Track([
-        (0, 0), (0.9, 0), (1.3, 0.3), (2.2, -0.3), (3.0, 0.8), (4.0, 0), (6.0, 0),
+        (0, 0), (0.9, 0), (1.3, 0.3), (2.2, -0.3), (3.0, 0.8), (4.0, 0), (duration, 0),
     ])
 
     /// Squash (wide and short) as the lid lands, stretch (narrow and tall) as it recovers.
@@ -68,7 +78,7 @@ public enum PillAnimation {
         for start in [1.25, 2.25, 3.25] {
             keys += [(start, 1), (start + 0.08, close), (start + 0.20, recover), (start + 0.35, 1)]
         }
-        keys.append((6.0, 1))
+        keys.append((duration, 1))
         return keys
     }
 }

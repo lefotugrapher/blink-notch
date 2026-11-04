@@ -18,35 +18,32 @@ slamming-eye idea but disliked the envelope itself, so the envelope is out.
   Source: `assets/notch-mockups-round2.html` (open it in a browser; the animation
   loops). Round 1 (`assets/notch-mockups-round1-envelopes.html`) is kept only as
   history. Do not build anything from it.
-- **Sequence** (the mockup runs a 6 s loop; treat these as targets, not law):
-  1. The black notch stretches down and slightly out into a rounded black pill,
-     about 232 x 74 pt in the mockup, with a small overshoot-and-settle.
-  2. Content fades in. Left: a ~40 pt round white eyeball with a black pupil that
-     looks around (left, right, down, back to centre). Right, three text lines:
-     - small grey caps: `MAIL · now`
-     - bold white headline: `Blink, you goof.`
-     - small grey: `from: your eyeballs`
-  3. The eyelid is a coral-red (#ff5a5f, darker rim #b3262b) slab that slams
-     down over the eye and pops back up, three times. The third one is held shut
-     a beat longer. The avatar squashes and stretches on every slam.
-  4. Content fades, the pill shrinks back into the notch.
-- The whole event lasts about 6 s and is non-interactive (clicks pass through it).
+- **Sequence (revised 2026-11-04 at his request):** the first version stretched the
+  notch itself into the pill and shrank it back through an ugly pointed-rectangle
+  shape that vanished abruptly. Replaced by one rounded shape that never touches
+  the notch (about 6.6 s in total; timings are targets, tune by eye):
+  1. A 44 pt black circle drops out from behind the notch to a resting spot with a
+     gap (10 pt) below the notch, with a small overshoot-and-settle.
+  2. It then grows into a 270 x 70 pt pill (a capsule), with a small overshoot.
+  3. Content fades in. Left: a ~40 pt round white eyeball with a black pupil that
+     looks around. Right, three text lines: small grey caps `MAIL · NOW`, bold white
+     headline (default `Blink, you goof.`), small grey `from: your eyeballs`.
+  4. The eyelid is a coral-red (#ff5a5f, darker rim #b3262b) slab that slams down
+     over the eye and pops back up, three times; the third is held shut a beat
+     longer. The avatar squashes and stretches on every slam.
+  5. Content fades out, the pill shrinks back into a circle, and the circle is held
+     in view for about 0.3 s before it rises back behind the notch.
+  The shape never moves and changes size at the same time.
+- The whole event is non-interactive (clicks pass through it).
 
 ### Geometry on the real notch (measured on this Mac; my call)
 
-The mockup uses a stand-in notch of 120 x 26 pt. The real one, read from
-`NSScreen` on this MacBook, is **220 pt wide and 38 pt tall** (the menu bar band
-is 38 pt; the screen is 2056 x 1329 pt). So:
-
-- In the top 38 pt (the menu-bar band) the black shape is exactly notch-width.
-  It never extends over the menu bar items beside the notch.
-- Below that band the shape widens into a body, roughly 260 to 280 pt wide, with
-  a rounded bottom and the same overshoot-and-settle. The silhouette is the
-  usual notch-app look: a neck at the notch, a wider body hanging below it.
-- All content (avatar and text) sits in the body, below the 38 pt band, because
-  the band is partly the physical cutout. The body is roughly 70 pt tall, so the
-  whole shape is about 108 pt from the top of the screen.
-- Read the notch size from `NSScreen` at run time. Don't hard-code 220 x 38.
+The real notch, read from `NSScreen`, is **220 pt wide and 38 pt tall** (screen
+2056 x 1329 pt). The shape never overlaps the menu-bar band beside the notch:
+it rests below the notch, with a 10 pt gap, and the circle is hidden behind the
+notch until it drops out. On a screen without a notch the same sequence runs
+from just below the menu bar, with an 8 pt gap. Read the notch size from
+`NSScreen` at run time; don't hard-code 220 x 38.
 
 ## What he agreed to (stated as guesses, he said "cool")
 
