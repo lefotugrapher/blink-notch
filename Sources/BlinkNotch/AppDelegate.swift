@@ -15,10 +15,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.menu = menu
         statusItem = item
 
-        let coordinator = ReminderCoordinator(presenter: pillController, screens: SystemScreens(), settings: Settings())
+        // Debug switches: --preview, --freeze-at <seconds>, --message <index>.
+        let args = CommandLine.arguments
+        func value(after flag: String) -> String? {
+            args.firstIndex(of: flag).flatMap { $0 + 1 < args.count ? args[$0 + 1] : nil }
+        }
+        let freezeAt = value(after: "--freeze-at").flatMap(Double.init)
+        pillController.debugFreezeAt = freezeAt
+        var pool = MessagePool()
+        if let index = value(after: "--message").flatMap(Int.init), MessagePool.all.indices.contains(index) {
+            pool = MessagePool(messages: [MessagePool.all[index]])
+        }
+
+        let coordinator = ReminderCoordinator(presenter: pillController, screens: SystemScreens(),
+                                              settings: Settings(), pool: pool)
         self.coordinator = coordinator
 
-        if CommandLine.arguments.contains("--preview") {
+        if args.contains("--preview") || freezeAt != nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { coordinator.showNow() }
         }
     }

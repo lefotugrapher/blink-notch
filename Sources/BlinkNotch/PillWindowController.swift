@@ -28,6 +28,8 @@ private final class PillPanel: NSPanel {
 @MainActor
 final class PillWindowController: PillPresenting {
     private(set) var isPresenting = false
+    /// Debug (`--freeze-at`): hold this moment of the animation instead of playing it.
+    var debugFreezeAt: TimeInterval?
     private var panel: PillPanel?
     private var dismissTimer: Timer?
     private var screenObserver: NSObjectProtocol?
@@ -46,11 +48,12 @@ final class PillWindowController: PillPresenting {
         let geometry = PillGeometry(display: display)
         let frame = geometry.windowFrame(on: display)
         let panel = PillPanel(frame: frame)
-        panel.contentView = NSHostingView(rootView: PillContent(geometry: geometry, startDate: Date()))
+        panel.contentView = NSHostingView(rootView: PillView(geometry: geometry, message: message, startDate: Date(), freezeAt: debugFreezeAt))
         panel.setFrame(frame, display: false)
         panel.orderFrontRegardless()
         self.panel = panel
         isPresenting = true
+        guard debugFreezeAt == nil else { return }
         dismissTimer = Timer.scheduledTimer(withTimeInterval: PillAnimation.duration + 0.1, repeats: false) { [weak self] _ in
             MainActor.assumeIsolated { self?.dismiss() }
         }
