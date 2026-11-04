@@ -11,3 +11,7 @@ func freshDefaults() -> UserDefaults {
 func date(_ secondsSince1970: Double) -> Date {
     Date(timeIntervalSince1970: secondsSince1970)
 }
+
+/// Foundation's `Date + TimeInterval` operator is not visible in files that
+/// cannot import Foundation, so provide it module-wide for tests.
+func + (lhs: Date, rhs: Double) -> Date { lhs.addingTimeInterval(rhs) }
